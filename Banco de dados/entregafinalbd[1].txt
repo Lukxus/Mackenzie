@@ -1,0 +1,360 @@
+--3. SCRIPT DE CRIAÇÃO DO BANCO DE DADOS E INSERÇÃO DE DADOS
+--____________________________________________________________
+
+CREATE TABLE Usuario (
+    codigo_usuario INT PRIMARY KEY,
+    nome_usuario VARCHAR(50),
+    num_telefone_usuario INT,
+    email_usuario VARCHAR(50)
+);
+
+CREATE TABLE Servidor (
+    codigo_servidor INT PRIMARY KEY,
+    nome_servidor VARCHAR(50),
+    fk_codigo_dono INT
+);
+
+CREATE TABLE Mensagens_Canal_de_Texto (
+    codigo_mensagem_texto INT PRIMARY KEY,
+    conteudo VARCHAR(250),
+        horario_enviado TIMESTAMP,
+    fk_Canal_codigo_canal INT,
+    fk_Usuario_codigo_usuario INT
+);
+
+CREATE TABLE Cargos (
+    codigo_cargo INT PRIMARY KEY,
+    nome_cargo VARCHAR(50),
+    perm_administrar NUMERIC(1,0),
+    perm_falar NUMERIC(1,0),
+    perm_digitar NUMERIC(1,0),
+    perm_ler NUMERIC(1,0)
+);
+
+CREATE TABLE Canal (
+    codigo_canal INT,
+    nome_canal VARCHAR(50),
+    Canal_TIPO NUMERIC(1,0),
+    fk_Servidor_codigo_servidor INT,
+    fk_Categoria_codigo_categoria INT,
+    PRIMARY KEY (codigo_canal)
+);
+
+CREATE TABLE Categoria (
+    codigo_categoria INT PRIMARY KEY,
+    nome_categoria VARCHAR(50),
+    fk_Servidor_codigo_servidor INT
+);
+
+CREATE TABLE Participa_Usuario_Servidor_Cargos (
+    fk_Usuario_codigo_usuario INT,
+    fk_Servidor_codigo_servidor INT,
+    fk_Cargos_codigo_cargo INT
+);
+
+ALTER TABLE Servidor ADD CONSTRAINT FK_Servidor_2
+    FOREIGN KEY (fk_codigo_dono)
+    REFERENCES Usuario (codigo_usuario)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Mensagens_Canal_de_Texto ADD CONSTRAINT FK_Mensagens_Canal_de_Texto_2
+    FOREIGN KEY (fk_Canal_codigo_canal)
+    REFERENCES Canal (codigo_canal)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Mensagens_Canal_de_Texto ADD CONSTRAINT FK_Mensagens_Canal_de_Texto_3
+    FOREIGN KEY (fk_Usuario_codigo_usuario)
+    REFERENCES Usuario (codigo_usuario)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Canal ADD CONSTRAINT FK_Canal_2
+    FOREIGN KEY (fk_Servidor_codigo_servidor)
+    REFERENCES Servidor (codigo_servidor)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Canal ADD CONSTRAINT FK_Canal_3
+    FOREIGN KEY (fk_Categoria_codigo_categoria)
+    REFERENCES Categoria (codigo_categoria)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Categoria ADD CONSTRAINT FK_Categoria_2
+    FOREIGN KEY (fk_Servidor_codigo_servidor)
+    REFERENCES Servidor (codigo_servidor)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Participa_Usuario_Servidor_Cargos ADD CONSTRAINT FK_Participa_Usuario_Servidor_Cargos_1
+    FOREIGN KEY (fk_Usuario_codigo_usuario)
+    REFERENCES Usuario (codigo_usuario);
+    --ON DELETE NO ACTION;
+ 
+ALTER TABLE Participa_Usuario_Servidor_Cargos ADD CONSTRAINT FK_Participa_Usuario_Servidor_Cargos_2
+    FOREIGN KEY (fk_Servidor_codigo_servidor)
+    REFERENCES Servidor (codigo_servidor);
+    --ON DELETE NO ACTION;
+ 
+ALTER TABLE Participa_Usuario_Servidor_Cargos ADD CONSTRAINT FK_Participa_Usuario_Servidor_Cargos_3
+    FOREIGN KEY (fk_Cargos_codigo_cargo)
+    REFERENCES Cargos (codigo_cargo);
+    --ON DELETE NO ACTION;
+    
+    
+    
+-- Inserindo dados na tebala usuario
+INSERT INTO Usuario(codigo_usuario, nome_usuario, num_telefone_usuario,
+email_usuario)
+VALUES
+(0001, 'Luiz Saraiva', 982258884, 'luizsaraiva50@gmail.com');
+
+INSERT INTO Usuario(codigo_usuario, nome_usuario, num_telefone_usuario,
+email_usuario)
+VALUES
+(0002, 'Matheus Farias', 944578374, 'matheus@gmail.com');
+
+INSERT INTO Usuario(codigo_usuario, nome_usuario, num_telefone_usuario,
+email_usuario)
+VALUES
+(0003, 'Fabio Domingues', 47475784893, 'fabio@gmail.com');
+
+INSERT INTO Usuario(codigo_usuario, nome_usuario, num_telefone_usuario,
+email_usuario)
+VALUES
+(0004, 'Leonardo Pinheiro', 7854884395, 'leooo@gmail.com');
+
+INSERT INTO Usuario(codigo_usuario, nome_usuario, num_telefone_usuario,
+email_usuario)
+VALUES
+(0005, 'Prof. Jamilson', 654812358, 'jamilson@mackenzie.com.br');
+
+
+-- Inserindo dados na tabela cargos
+INSERT INTO Cargos(codigo_cargo, nome_cargo, perm_administrar,
+perm_falar, perm_digitar, perm_ler)
+VALUES
+(0001, 'Reguladores', 1, 1, 1, 1);
+
+INSERT INTO Cargos(codigo_cargo, nome_cargo, perm_administrar,
+perm_falar, perm_digitar, perm_ler)
+VALUES
+(0002, 'Estudantes', 0, 1, 1, 1);
+
+INSERT INTO Cargos(codigo_cargo, nome_cargo, perm_administrar,
+perm_falar, perm_digitar, perm_ler)
+VALUES
+(0003, 'Jogadores', 0, 1, 1, 1);
+
+INSERT INTO Cargos(codigo_cargo, nome_cargo, perm_administrar,
+perm_falar, perm_digitar, perm_ler)
+VALUES
+(0004, 'Visitantes', 0, 0, 0, 1);
+
+INSERT INTO Cargos(codigo_cargo, nome_cargo, perm_administrar,
+perm_falar, perm_digitar, perm_ler)
+VALUES
+(0005, 'Professor', 0, 0, 1, 1);
+
+
+-- Inserindo dados na tabela Servidor
+INSERT INTO Servidor(codigo_servidor, nome_servidor, fk_codigo_dono)
+VALUES
+(0001, 'Sala 03G', 0001);
+
+INSERT INTO Servidor(codigo_servidor, nome_servidor, fk_codigo_dono)
+VALUES
+(0002, 'DATEM', 0002);
+
+INSERT INTO Servidor(codigo_servidor, nome_servidor, fk_codigo_dono)
+VALUES
+(0003, 'AAA Aurora Albanese', 0003);
+
+INSERT INTO Servidor(codigo_servidor, nome_servidor, fk_codigo_dono)
+VALUES
+(0004, 'Laboratorio de Pesquisa', 0004);
+
+-- Inserindo dados na tabela Participa_Usuario_Servidor_Cargos
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0001, 0001, 0001);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0001, 0002, 0004);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0001, 0003, 0003);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0001, 0004, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0002, 0001, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor)
+VALUES
+(0002, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0003, 0001, 0001);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0003, 0001, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0003, 0003, 0003);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0004, 0001, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0004, 0002, 0002);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0004, 0004, 0001);
+
+INSERT INTO Participa_Usuario_Servidor_Cargos(fk_Usuario_codigo_usuario,
+fk_Servidor_codigo_servidor, fk_Cargos_codigo_cargo)
+VALUES
+(0005, 0001, 0005);
+
+-- Inserindo dados na tabela Categoria
+INSERT INTO Categoria
+VALUES (0001, 'INFORMAÇÕES IMPORTANTES!', 0001);
+
+INSERT INTO Categoria
+VALUES (0002, 'Vôlei', 0003);
+
+INSERT INTO Categoria
+VALUES (0003, 'League of Legends', 0003);
+
+INSERT INTO Categoria
+VALUES (0004, 'Valorant', 0003);
+
+-- Inserindo dados na tabela Canal
+INSERT INTO Canal
+VALUES (0001, 'Datas Provas', 0, 0001, 0001);
+
+INSERT INTO Canal
+VALUES (0002, 'Horários', 0, 0001, 0001);
+
+INSERT INTO Canal
+VALUES (0003, 'Dúvidas', 0, 0001, 0001);
+
+INSERT INTO Canal
+VALUES (0004, 'AVISOS', 0, 0002, null);
+
+INSERT INTO Canal
+VALUES (0005, 'DISCUSSÃO', 1, 0002, null);
+
+INSERT INTO Canal
+VALUES (0006, 'Horários Partidas', 0, 0003, 0002);
+
+INSERT INTO Canal
+VALUES (0007, 'Horários Partidas', 0, 0003, 0003);
+
+INSERT INTO Canal
+VALUES (0008, 'Treino', 1, 0003, 0003);
+
+INSERT INTO Canal
+VALUES (0009, 'Horários Partidas', 0, 0003, 0004);
+
+INSERT INTO Canal
+VALUES (0010, 'Treino', 1, 0003, 0004);
+
+-- Inserindo dados na tabela Mensagens_Canal_de_Texto
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0001, 'Seguem os horários das partidas: ', TIMESTAMP '2022-02-01 12:06:33', 0006, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0002, 'Partida 1: 18:00', TIMESTAMP '2022-02-01 12:06:36', 0006, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0003, 'Partida 2: 19:00', TIMESTAMP '2022-02-01 12:06:39', 0006, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0004, 'ESTA É UMA MENSAGEM IMPORTANTE!', TIMESTAMP '2022-02-01 23:59:59', 0004, 0002);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0005, 'Banco de Dados: \nP1: 29/3 \nP2: 31/05', TIMESTAMP '2022-02-15 23:59:59', 0001, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0006, 'Estrutura de Dados: \nP1: 30/3 \nP2: 02/06', TIMESTAMP '2022-02-15 23:05:32', 0001, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0007, 'Salve gente, criei o servidor aqui pra gente se organizar pras aulas', TIMESTAMP '2022-02-16 00:01:24', 0003, 0001);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0008, 'Opa, nice!', TIMESTAMP '2022-02-16 00:05:40', 0003, 0003);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0009, 'Daora mano!', TIMESTAMP '2022-02-16 00:06:32', 0003, 0002);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0010, 'Mandou bem!', TIMESTAMP '2022-02-16 00:06:35', 0003, 0004);
+
+INSERT INTO Mensagens_Canal_de_Texto
+VALUES (0011, 'TRABALHO NOTA 10!', TIMESTAMP '2022-05-21 23:59:59', 0003, 0005);
+
+
+
+
+--5. ELABORAR e RESOLVER CINCO CONSULTAS, utilizando a Linguagem SQL e obedecer aos seguintes critérios:
+--	5.1. UMA consulta (sem GROUP BY) envolvendo DUAS tabelas (com INNER JOIN);
+--	5.2. UMA consulta contendo GROUP BY envolvendo DUAS tabelas (com INNER JOIN);
+--	5.3. UMA consulta contendo DUAS tabelas e utilizando LEFT JOIN ou RIGHT JOIN;
+--	5.4. UMA consulta contendo TRÊS ou mais tabelas (pode ser utilizado INNER JOIN, LEFT JOIN ou RIGHT JOIN)
+--____________________________________________________________________________________________________________________
+
+-- Consulta 5.1
+-- Listar os donos de cada servidor e suas informações
+SELECT *
+FROM Usuario U INNER JOIN Servidor S
+ON U.codigo_usuario = S.fk_codigo_dono
+ORDER BY codigo_usuario ASC;
+
+-- Consulta 5.2
+-- Listar todos os usuários e quantas mensagens cada um enviou no total
+SELECT U.codigo_usuario, U.nome_usuario, count(MCT.fk_Usuario_codigo_usuario) as Total_mensagens
+FROM Usuario U INNER JOIN Mensagens_Canal_de_Texto MCT
+ON (U.codigo_usuario = MCT.fk_Usuario_codigo_usuario)
+GROUP BY U.codigo_usuario, U.nome_usuario
+ORDER BY Total_mensagens DESC;
+
+-- Consulta 5.3
+-- Listar os servidores e todos os canais pertencentes a cada servidor
+SELECT S.nome_servidor, CL.nome_canal
+FROM Servidor S LEFT JOIN Canal CL
+ON (S.codigo_servidor = CL.fk_Servidor_codigo_servidor);
+
+-- Consulta 5.4
+-- Listar quais servidores que cada usuário participa, seus respectivos cargos e permissões
+SELECT U.codigo_usuario, U.nome_usuario, S.fk_codigo_dono AS Codigo_Dono_Servidor, S.nome_servidor, CG.codigo_cargo, CG.nome_cargo, CG.perm_administrar, CG.perm_falar, CG.perm_digitar, CG.perm_ler
+FROM Usuario U INNER JOIN Participa_Usuario_Servidor_Cargos PA
+ON (U.codigo_usuario = PA.fk_Usuario_codigo_usuario)
+INNER JOIN Servidor S
+ON (PA.fk_Servidor_codigo_servidor = S.codigo_servidor)
+LEFT JOIN Cargos CG
+ON (PA.fk_Cargos_codigo_cargo = CG.codigo_cargo)
+LEFT JOIN Servidor S
+ON (U.codigo_usuario = S.fk_codigo_dono)
+ORDER BY codigo_usuario, codigo_cargo ASC;
+
